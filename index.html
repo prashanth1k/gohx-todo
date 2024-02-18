@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gohx Todo</title>
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <link rel="stylesheet" href="https://classless.de/classless.css">
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- default CSS -->
+    <style>
+        #todo-list {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        #todo-list li {
+            margin-bottom: 0.5em;
+        }
+
+        #todo-list li input[type="checkbox"] {
+            margin-right: 0.5em;
+        }
+    </style>
+</head>
+
+<body x-data="{ todo: '' }">
+    <nav>
+        <ul>
+            <li>GoHx Todo</li>
+            <li class="float-right"><a href="/">Home </a></li>
+        </ul>
+    </nav>
+    <h1>Track Todos</h1>
+    <small>This is a simple todo app using Go and HTMX</small>
+    <form id="todo-form" style="margin-top:1em;" hx-post="/api/todo" hx-target="#todo-list" hx-swap="afterbegin">
+        <input type="text" id="todo" name="todo" placeholder="Enter a todo" x-model="todo">
+        <button type="submit">Add</button>
+    </form>
+
+    <ul id="todo-list">
+        {{ range .Todos }}
+        {{ block "todo-item" . }}
+        <li><input id="{{ .Id }}" type="checkbox" x-bind:checked="{{ .Done }}"> {{ .Title }} -- {{ .Done
+            }} -- {{ .Id }}</li>
+        {{ end }}
+        {{ end }}
+    </ul>
+
+</body>
+
+</html>
